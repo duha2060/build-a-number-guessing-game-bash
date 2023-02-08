@@ -6,14 +6,14 @@ echo "Enter your username:"
 read USERNAME
 
 USER=$($PSQL "select name from users where name='$USERNAME'")
-GAMES=$($PSQL "SELECT COUNT(*) FROM users JOIN games USING(user_id) WHERE name='$USER'")
-BEST_GAME=$($PSQL "SELECT MIN(number_guesses) FROM users JOIN games USING(user_id) WHERE name='$USER'")
+GAMES=$($PSQL "SELECT COUNT(*) FROM users JOIN games USING(user_id) WHERE name='$USERNAME'")
+BEST_GAME=$($PSQL "SELECT MIN(number_guesses) FROM users JOIN games USING(user_id) WHERE name='$USERNAME'")
 if [[ -z $USER ]]
 then
   ADD_USERNAME=$($PSQL "INSERT INTO users(name) VALUES('$USERNAME')")
   echo "Welcome, $USERNAME! It looks like this is your first time here."
 else
- echo "Welcome back, $USERNAME! You have played $GUESS games, and your best game took <best_game> guesses."
+ echo "Welcome back, $USERNAME! You have played $GAMES games, and your best game took $BEST_GAME guesses."
 fi
 
 NUMBER=$((1 + $RANDOM % 1000))
@@ -44,5 +44,5 @@ do
   GUESS=$(( $GUESS + 1 ))
 done
 
-USER_ID=$($PSQL "SELECT user_id FROM users where name='$USER'")
+USER_ID=$($PSQL "SELECT user_id FROM users where name='$USERNAME'")
 INSERT_GAMES=$($PSQL "INSERT INTO games(number_guesses, user_id) VALUES($GUESS, $USER_ID)")
