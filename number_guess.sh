@@ -44,3 +44,5 @@ do
   GUESS=$(( $GUESS + 1 ))
 done
 
+USER_ID=$($PSQL "SELECT user_id FROM users where name='$USER'")
+INSERT_GAMES=$($PSQL "INSERT INTO games(number_guesses, user_id) VALUES($GUESS, $USER_ID)")
